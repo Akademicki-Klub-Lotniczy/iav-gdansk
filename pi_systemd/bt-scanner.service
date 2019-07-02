@@ -1,0 +1,10 @@
+[Unit]
+Description=iBeacon scanner
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python2 /root/iav-gdansk/code/iBeacon_Scanner/testblescan.py
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

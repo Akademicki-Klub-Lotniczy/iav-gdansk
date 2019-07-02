@@ -1,0 +1,1 @@
+mavproxy.py --master=/dev/ttyS0 --baudrate 57600

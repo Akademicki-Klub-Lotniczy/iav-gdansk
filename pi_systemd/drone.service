@@ -1,0 +1,12 @@
+[Unit]
+Description=Drone contest
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /root/iav-gdansk/code/main.py "/dev/ttyS0"
+#ExecStart=/usr/bin/python3 /root/iav-gdansk/code/main.py "192.168.0.46:14550"
+
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

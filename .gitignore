@@ -1,0 +1,5 @@
+venv
+*.parm
+*.tlog.raw
+mav.tlog
+.vscode
