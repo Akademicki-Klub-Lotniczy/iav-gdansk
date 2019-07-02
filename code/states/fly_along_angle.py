@@ -18,7 +18,7 @@ class FlyAlongAngleState(State):
             try:
                 uuid, major, minor, rssi = self.bluetooth_data_queue.get(False)
 
-                if uuid not in self.markers_found:
+                if uuid not in self.markers_found and (major == '65312' or major == '65535'):
                     self.markers_found.append(uuid)
                 else:
                     #print('already in')
