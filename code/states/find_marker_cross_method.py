@@ -92,6 +92,7 @@ class FindMarkerCrossMethod(State):
                         False)
                     current_rssi_sum += rssi
                     current_measures_count += 1
+                    logger.debug('Got something on bt queue')
             except:
                 if current_measures_count != 0:  # If there were no measurements, we don't count that region
                     average_rssi_for_current_region = current_rssi_sum / current_measures_count

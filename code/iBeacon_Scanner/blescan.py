@@ -19,6 +19,7 @@ import os
 import sys
 import struct
 import bluetooth._bluetooth as bluez
+import socket
 
 LE_META_EVENT = 0x3e
 LE_PUBLIC_ADDRESS=0x00
@@ -113,8 +114,8 @@ def hci_le_set_scan_parameters(sock):
 
 
     
-def parse_events(sock, loop_count=100):
-    old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
+def parse_events(sock, udp_sock_to_send_out):
+    #old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 
     # perform a device inquiry on bluetooth device #0
     # The inquiry should last 8 * 1.28 = 10.24 seconds
@@ -127,7 +128,7 @@ def parse_events(sock, loop_count=100):
     done = False
     results = []
     myFullList = []
-    for i in range(0, loop_count):
+    while True:
         pkt = sock.recv(255)
         ptype, event, plen = struct.unpack("BBB", pkt[:3])
         #print "--------------" 
@@ -148,36 +149,47 @@ def parse_events(sock, loop_count=100):
                 report_pkt_offset = 0
                 for i in range(0, num_reports):
 		
-		    if (DEBUG == True):
-			#print "-------------"
-                    	#print "\tfullpacket: ", printpacket(pkt)
-		    	print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
-		    	print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
-		    	print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
-                    	print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
-		    	# commented out - don't know what this byte is.  It's NOT TXPower
-                    	txpower, = struct.unpack("b", pkt[report_pkt_offset -2])
-                    	print "\t(Unknown):", txpower
-	
-                    	rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
-                    	print "\tRSSI:", rssi
 		    # build the return string
-                    Adstring = '' #packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
+                    #Adstring = '' #packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
 		    # Adstring += ","
-		    Adstring += returnstringpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6]) 
-		    Adstring += ","
-		    Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4]) 
-		    Adstring += ","
-		    Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2]) 
-		    Adstring += ","
-		    Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -2])
-		    Adstring += ","
-		    Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])
+    
+                    uuid = returnstringpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6]) 
+                    # print i              
+                    major = returnnumberpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4]) 
+                    minor = returnnumberpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2]) 
+                    tx = struct.unpack("b", pkt[report_pkt_offset -2])
+                    rssi = struct.unpack("b", pkt[report_pkt_offset -1])[0]
 
-		    #print "\tAdstring=", Adstring
- 		    myFullList.append(Adstring)
-                done = True
-    sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
+                    # Filtering out the beacons don't have the contest-specific majors
+                    if major not in [65312, 65535, 0]:
+                        continue 
+                    
+                    # beacon = "%s, %i, %i, %i" % (uuid, major, minor, rssi)
+                    beacon = "%s,%i,%i,%i" % (uuid, major, minor, rssi)
+                    beacon = beacon.encode('utf8')
+                    udp_sock_to_send_out.sendto(beacon,("127.0.0.1" ,7777))
+                    print beacon
+    #sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
     return myFullList
 
 
+
+if __name__ == '__main__':
+    socke=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    dev_id = 1
+    try:
+        sock = bluez.hci_open_dev(dev_id)
+        print "ble thread started"
+
+    except:
+        print "error accessing bluetooth device..."
+        sys.exit(1)
+
+    hci_le_set_scan_parameters(sock)
+    hci_enable_le_scan(sock)
+
+    parse_events(sock, socke)
+        # # print "----------"
+        # for beacon in returnedList:
+        #     socke.sendto(beacon.encode('utf8'),("127.0.0.1" ,7777))
+        #     print beacon.encode('utf8')

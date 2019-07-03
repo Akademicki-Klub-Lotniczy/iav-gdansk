@@ -13,14 +13,11 @@ def scan_bt(bt_queue):
 
     while True:
         data, addr = sock.recvfrom(128) # buffer size is 128 bytes
-        uuid, major, minor, tx, rssi = data.decode("utf-8").split(',')
+        uuid, major, minor, rssi = data.decode("utf-8").split(',')
 
-        # This weird beacon was appearing in my house. TODO: investigate
-        if major not in ['65312', '65535']: 
-            continue
 
         bt_queue.put( (uuid, major, minor, rssi) )
-        logger.debug("received message:", uuid, major, minor, rssi)
+        logger.debug("received bluetooth:", uuid, major, minor, rssi)
 
 class DummyQueue:
     def put(self, value):
