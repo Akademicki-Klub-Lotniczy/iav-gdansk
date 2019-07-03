@@ -7,6 +7,7 @@ import nav_utils
 import flight_utils
 import hex_utils
 import logging
+import queue
 
 logger = logging.getLogger(__name__)
 
@@ -50,9 +51,8 @@ class FindMarkerCrossMethod(State):
         logger.info('located major %s', self.major)
         if self.major == '65312':  # A normal beacon, poiting to the next beacon on the route
             raise EnteredFlyAlongAngleState(
-                # THIS CONVERSION IS IMPORTANT AF, DO NOT FORGET, NEVER
                 self.current_target_angle +
-                hex_utils.get_angle_from_minor(self.minor)
+                hex_utils.get_angle_from_minor(self.minor) # THIS CONVERSION IS IMPORTANT AF, DO NOT FORGET, NEVER
             )
 
         elif self.major == '0':  # A beacon on the side of the field, poiting the drone back on the route
@@ -77,6 +77,8 @@ class FindMarkerCrossMethod(State):
         final_lat = 0
         final_lon = 0
 
+        self.clear_bt_queue() # Clear the queue before doing anything, because it MIGHT be full of some garbage
+
         for i in range(20):
             logger.debug('flying on axis: %i/20', i)
             starting_lat, starting_lon = nav_utils.get_location(self.vehicle)
@@ -90,10 +92,10 @@ class FindMarkerCrossMethod(State):
                     # Get all the data that the BT receiver has collected
                     uuid, major, minor, rssi = self.bluetooth_data_queue.get(
                         False)
-                    current_rssi_sum += rssi
+                    current_rssi_sum += int(rssi)
                     current_measures_count += 1
-                    logger.debug('Got something on bt queue')
-            except:
+                    # logger.debug('Got something on bt queue')
+            except queue.Empty:
                 if current_measures_count != 0:  # If there were no measurements, we don't count that region
                     average_rssi_for_current_region = current_rssi_sum / current_measures_count
                     logging.debug('current average: %i, best average: %i',
@@ -104,7 +106,8 @@ class FindMarkerCrossMethod(State):
                         final_lon = (starting_lon +
                                      self.vehicle.location._lon)/2
                         highest_average_RSSI = average_rssi_for_current_region
-
+                else:
+                    logger.warn('Nothing in bt queue on %i scanned segment', i)
         end_point = LocationGlobalRelative(
             final_lat,
             final_lon,

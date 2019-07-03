@@ -21,6 +21,8 @@ import sys
 # import background
 import hex_utils
 from dronekit import Vehicle
+import queue
+
 
 '''
 
@@ -98,3 +100,9 @@ class State(ABC):
     def get_data_from_exception(self, exception):
         pass
 
+    def clear_bt_queue(self):
+        try:
+            while True:
+                self.bluetooth_data_queue.get(False)
+        except queue.Empty:
+            return

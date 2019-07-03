@@ -1,7 +1,7 @@
 import sys
 
 
-FLIGHT_ALTITUDE = 4
+FLIGHT_ALTITUDE = 1.6
 FLIGHT_SPEED = 1
 FLIGHT_SPEED_DURING_SCAN = 0.5
 SIMULATE_BEACON = len(sys.argv) == 1
@@ -51,7 +51,7 @@ LOGGING = {
             'level': 'INFO',
         },
         'real_bluetooth': {
-            'level': 'INFO',
+            'level': 'DEBUG',
         },
         'flight_utils': {
             'level': 'INFO',
