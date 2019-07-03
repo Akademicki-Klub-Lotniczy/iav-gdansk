@@ -1,7 +1,10 @@
-from .state import State
+from exceptions import EnteredFlyAlongAngleState
+
 import flight_utils
 import settings
-from exceptions import EnteredFlyAlongAngleState
+
+from .state import State
+
 
 class CalibrateAndLaunchState(State):
     def run(self):

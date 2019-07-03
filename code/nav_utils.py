@@ -1,10 +1,13 @@
-from dronekit import connect, VehicleMode, LocationGlobalRelative
-from geopy.distance import geodesic
-from math import sin, cos, radians
-import settings
 import logging
+from math import cos, radians, sin
+
+from dronekit import LocationGlobalRelative, VehicleMode, connect
+from geopy.distance import geodesic
+
+import settings
 
 logger = logging.getLogger(__name__)
+
 
 def calculate_carthesian_coefficient(vehicle):
     lat = vehicle.location._lat

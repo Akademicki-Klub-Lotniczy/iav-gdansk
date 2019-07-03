@@ -1,9 +1,11 @@
-from .state import State
+import logging
+import time
 from exceptions import EnteredFindMarkerState, EnteredFlyAlongAngleState
+
 import nav_utils
 import settings
-import time
-import logging
+
+from .state import State
 
 logger = logging.getLogger(__name__)
 

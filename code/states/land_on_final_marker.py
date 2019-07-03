@@ -1,7 +1,10 @@
-from .state import State
-from exceptions import EnteredLandingState
-from dronekit import VehicleMode
 import time
+from exceptions import EnteredLandingState
+
+from dronekit import VehicleMode
+
+from .state import State
+
 
 class LandOnFinalMarkerState(State):
     def run(self):

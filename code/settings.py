@@ -1,31 +1,29 @@
 import sys
 
-
 FLIGHT_ALTITUDE = 1.6
 FLIGHT_SPEED = 1
 FLIGHT_SPEED_DURING_SCAN = 0.5
 SIMULATE_BEACON = len(sys.argv) == 1
 
 
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-   
+
     'formatters': {
-            'detailed': {
-                'class': 'logging.Formatter',
-                # 'datefmt': '%H:%M:%S',
-                'format': '%(asctime)s %(name)-30s %(levelname)-20s %(message)s'
-            }
-        },
+        'detailed': {
+            'class': 'logging.Formatter',
+            # 'datefmt': '%H:%M:%S',
+            'format': '%(asctime)s %(name)-30s %(levelname)-20s %(message)s'
+        }
+    },
 
     'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
-                'level': 'DEBUG',
-                'formatter': 'detailed',
-            }
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+            'formatter': 'detailed',
+        }
     },
 
     'loggers': {

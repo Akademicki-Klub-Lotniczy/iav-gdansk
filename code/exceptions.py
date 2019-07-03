@@ -16,7 +16,7 @@ class EnteredFindMarkerState(Exception):
 class EnteredFlyAlongAngleState(Exception):
     def __init__(self, new_target_angle: int):
         logger.info('entering flying along angle state')
-        
+
         super().__init__()
         self.new_target_angle = new_target_angle
 
@@ -26,6 +26,7 @@ class EnteredLandingState(Exception):
         logger.info('entering landing state')
         super().__init__()
         self.beacon_location = beacon_location
+
 
 if __name__ == '__main__':
     try:

@@ -1,13 +1,17 @@
-from .state import State
-from dronekit import LocationGlobalRelative
-from exceptions import EnteredFindMarkerState, EnteredLandingState, EnteredFlyAlongAngleState
-import time
-import settings
-import nav_utils
-import flight_utils
-import hex_utils
 import logging
 import queue
+import time
+from exceptions import (EnteredFindMarkerState, EnteredFlyAlongAngleState,
+                        EnteredLandingState)
+
+from dronekit import LocationGlobalRelative
+
+import flight_utils
+import hex_utils
+import nav_utils
+import settings
+
+from .state import State
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +56,8 @@ class FindMarkerCrossMethod(State):
         if self.major == '65312':  # A normal beacon, poiting to the next beacon on the route
             raise EnteredFlyAlongAngleState(
                 self.current_target_angle +
-                hex_utils.get_angle_from_minor(self.minor) # THIS CONVERSION IS IMPORTANT AF, DO NOT FORGET, NEVER
+                # THIS CONVERSION IS IMPORTANT AF, DO NOT FORGET, NEVER
+                hex_utils.get_angle_from_minor(self.minor)
             )
 
         elif self.major == '0':  # A beacon on the side of the field, poiting the drone back on the route
@@ -77,7 +82,8 @@ class FindMarkerCrossMethod(State):
         final_lat = 0
         final_lon = 0
 
-        self.clear_bt_queue() # Clear the queue before doing anything, because it MIGHT be full of some garbage
+        # Clear the queue before doing anything, because it MIGHT be full of some garbage
+        self.clear_bt_queue()
 
         for i in range(20):
             logger.debug('flying on axis: %i/20', i)
@@ -98,8 +104,10 @@ class FindMarkerCrossMethod(State):
             except queue.Empty:
                 if current_measures_count != 0:  # If there were no measurements, we don't count that region
                     average_rssi_for_current_region = current_rssi_sum / current_measures_count
-                    logging.debug('current average: %i, best average: %i',
-                                  average_rssi_for_current_region, highest_average_RSSI)
+
+                    logger.debug('current average: %i, best average: %i',
+                                 average_rssi_for_current_region, highest_average_RSSI)
+
                     if average_rssi_for_current_region > highest_average_RSSI:
                         final_lat = (starting_lat +
                                      self.vehicle.location._lat)/2

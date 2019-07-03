@@ -1,6 +1,7 @@
-import numpy as np
 import random
 import time
+
+import numpy as np
 
 TREND_POLYNOMIAL_DATA = [0.07203093,  -1.19743153,
                          8.5113106,  -26.83310929, -65.60632184]
@@ -50,7 +51,6 @@ if __name__ == '__main__':
     distance = 2
 
     b = BeaconSimulator()
-    
 
     for _ in range(1200):
         if b.will_tick_100_ms(distance):

@@ -1,10 +1,11 @@
-from dronekit import VehicleMode
-import time
-import settings
 import logging
+import time
+
+from dronekit import VehicleMode
+
+import settings
 
 logger = logging.getLogger(__name__)
-
 
 
 def arm(vehicle):
@@ -29,6 +30,7 @@ def set_speed(vehicle):
     # vehicle.airspeed = settings.FLIGHT_SPEED # Speed limit: 1 speeds #pdk
     vehicle.groundspeed = settings.FLIGHT_SPEED
 
+
 def takeoff(vehicle, aTargetAltitude):
     """
     Arms vehicle and fly to aTargetAltitude.
@@ -41,15 +43,17 @@ def takeoff(vehicle, aTargetAltitude):
     #  (otherwise the command after Vehicle.simple_takeoff will execute
     #   immediately).
     while True:
-        logger.info(" Altitude: %f", vehicle.location.global_relative_frame.alt)
+        logger.info(" Altitude: %f",
+                    vehicle.location.global_relative_frame.alt)
         # Break and return from function just below target altitude.
         if vehicle.location.global_relative_frame.alt >= aTargetAltitude * 0.95:
             logger.info("Reached target altitude")
             break
         time.sleep(1)
 
+
 def stop(vehicle, time_to_stop=5):
     vehicle.simple_goto(
-            vehicle.location.global_relative_frame
+        vehicle.location.global_relative_frame
     )
     time.sleep(time_to_stop)

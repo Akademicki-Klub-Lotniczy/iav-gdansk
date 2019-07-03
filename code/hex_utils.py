@@ -14,9 +14,9 @@ def get_angle_from_minor(minor: str) -> int:
     """
     return int(hex(int(minor))[2:])
 
+
 if __name__ == '__main__':
-    # The value for a given angle can be obtained using `int('360', 16)` where 360 is the angle 
+    # The value for a given angle can be obtained using `int('360', 16)` where 360 is the angle
     # (remember about the quotation, it has to be string-type)
-    print(get_angle_from_minor('48')) # 30
-    print(get_angle_from_minor('864')) # 360
-    
+    print(get_angle_from_minor('48'))  # 30
+    print(get_angle_from_minor('864'))  # 360

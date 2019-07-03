@@ -1,27 +1,18 @@
-from abc import ABC, abstractmethod
 import multiprocessing
+import queue
+import sys
+import time
+from abc import ABC, abstractmethod
+from exceptions import (EnteredFindMarkerState, EnteredFlyAlongAngleState,
+                        EnteredLandingState)
 
-
-from exceptions import \
-    EnteredFindMarkerState, \
-    EnteredFlyAlongAngleState, \
-    EnteredLandingState
-
-
-from dronekit import \
-    connect, \
-    VehicleMode, \
-    LocationGlobalRelative
+from dronekit import LocationGlobalRelative, Vehicle, VehicleMode, connect
 
 import flight_utils
-import nav_utils
-import settings
-import time
-import sys
 # import background
 import hex_utils
-from dronekit import Vehicle
-import queue
+import nav_utils
+import settings
 
 
 '''
