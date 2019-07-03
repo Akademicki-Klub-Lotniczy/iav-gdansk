@@ -39,3 +39,5 @@ class FlyAlongAngleState(State):
 
     def get_data_from_exception(self, exception: EnteredFlyAlongAngleState):
         self.targetAngle = exception.new_target_angle
+        if exception.reset_found_beacons:
+            self.markers_found = []

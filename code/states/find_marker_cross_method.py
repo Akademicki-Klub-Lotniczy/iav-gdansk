@@ -54,6 +54,7 @@ class FindMarkerCrossMethod(State):
 
         logger.info('located major %s', self.major)
         if self.major == '65312':  # A normal beacon, poiting to the next beacon on the route
+            logger.info('Another track point located')
             raise EnteredFlyAlongAngleState(
                 self.current_target_angle +
                 # THIS CONVERSION IS IMPORTANT AF, DO NOT FORGET, NEVER
@@ -61,12 +62,15 @@ class FindMarkerCrossMethod(State):
             )
 
         elif self.major == '0':  # A beacon on the side of the field, poiting the drone back on the route
+            logger.warn('Beacon poiting back at the track located')
             raise EnteredFlyAlongAngleState(
                 # THIS CONVERSION IS IMPORTANT AF, DO NOT FORGET, NEVER
-                hex_utils.get_angle_from_minor(self.minor)
+                hex_utils.get_angle_from_minor(self.minor),
+                reset_found_beacons=True # Resetting the beacons found, because we've lost the track if this beacon was found
             )
 
         elif self.major == '65535':  # Final beacon
+            logger.critical('Located the final beacon')
             raise EnteredLandingState(beacon_location)
 
     def locate_beacon_on_axis(self, angle: int) -> LocationGlobalRelative:

@@ -14,11 +14,13 @@ class EnteredFindMarkerState(Exception):
 
 
 class EnteredFlyAlongAngleState(Exception):
-    def __init__(self, new_target_angle: int):
+    def __init__(self, new_target_angle: int, reset_found_beacons=False):
         logger.info('entering flying along angle state')
 
         super().__init__()
         self.new_target_angle = new_target_angle
+        self.reset_found_beacons = reset_found_beacons
+
 
 
 class EnteredLandingState(Exception):
