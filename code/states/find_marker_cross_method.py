@@ -49,7 +49,7 @@ class FindMarkerCrossMethod(State):
             self.current_target_angle - 90)  # Locate the beacon on the second axis
         # Go to the final location
         self.vehicle.simple_goto(beacon_location)
-        time.sleep(10)
+        time.sleep(15)
         flight_utils.stop(self.vehicle)
 
         logger.info('located major %s', self.major)
