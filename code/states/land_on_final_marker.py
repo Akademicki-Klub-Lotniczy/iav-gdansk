@@ -4,6 +4,7 @@ from exceptions import EnteredLandingState
 from dronekit import VehicleMode
 
 from .state import State
+import background
 
 
 class LandOnFinalMarkerState(State):
@@ -13,6 +14,7 @@ class LandOnFinalMarkerState(State):
         time.sleep(10)
         # background.end_background_processes()
         self.vehicle.close()
+        background.end_background_processes()
         exit(0)
 
     def get_data_from_exception(self, exception: EnteredLandingState):
