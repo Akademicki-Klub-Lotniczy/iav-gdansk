@@ -56,7 +56,7 @@ class FindMarkerCrossMethod(State):
         if self.major == '65312':  # A normal beacon, poiting to the next beacon on the route
             logger.info('Another track point located')
             raise EnteredFlyAlongAngleState(
-                self.current_target_angle +
+                self.current_target_angle -
                 # THIS CONVERSION IS IMPORTANT AF, DO NOT FORGET, NEVER
                 hex_utils.get_angle_from_minor(self.minor)
             )
@@ -65,7 +65,7 @@ class FindMarkerCrossMethod(State):
             logger.warn('Beacon poiting back at the track located')
             raise EnteredFlyAlongAngleState(
                 # THIS CONVERSION IS IMPORTANT AF, DO NOT FORGET, NEVER
-                hex_utils.get_angle_from_minor(self.minor),
+                self.starting_angle - hex_utils.get_angle_from_minor(self.minor),
                 reset_found_beacons=True # Resetting the beacons found, because we've lost the track if this beacon was found
             )
 
@@ -138,3 +138,4 @@ class FindMarkerCrossMethod(State):
         self.uuid_to_find = exception.uuid
         self.major = exception.major
         self.minor = exception.minor
+        self.starting_angle = exception.starting_angle

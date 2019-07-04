@@ -35,9 +35,13 @@ class FlyAlongAngleState(State):
                 continue
 
             logging.info('Detected', uuid)
-            raise EnteredFindMarkerState(self.targetAngle, uuid, major, minor)
+            raise EnteredFindMarkerState(self.targetAngle, self.starting_angle, uuid, major, minor)
 
     def get_data_from_exception(self, exception: EnteredFlyAlongAngleState):
         self.targetAngle = exception.new_target_angle
+
+        if exception.starting_angle is not None:
+            self.starting_angle = exception.starting_angle
+
         if exception.reset_found_beacons:
             self.markers_found = []

@@ -16,7 +16,7 @@ class CalibrateAndLaunchState(State):
         start_heading = self.vehicle.heading
         flight_utils.takeoff(self.vehicle, settings.FLIGHT_ALTITUDE)
 
-        raise EnteredFlyAlongAngleState(start_heading)
+        raise EnteredFlyAlongAngleState(start_heading, starting_angle=start_heading)
 
     def get_data_from_exception(self, exception):
         pass
