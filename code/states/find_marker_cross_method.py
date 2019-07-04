@@ -102,6 +102,10 @@ class FindMarkerCrossMethod(State):
                     # Get all the data that the BT receiver has collected
                     uuid, major, minor, rssi = self.bluetooth_data_queue.get(
                         False)
+
+                    if uuid != self.uuid_to_find: # Only looking for the uuid reported by EnteredFindMarkerState exception
+                        continue
+                    
                     current_rssi_sum += int(rssi)
                     current_measures_count += 1
                     # logger.debug('Got something on bt queue')
