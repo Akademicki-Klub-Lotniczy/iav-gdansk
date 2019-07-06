@@ -19,7 +19,7 @@ systemctl start drone &
 sleep 1
 
 echo "###    Displaying logs..   ###"
-journalctl -u drone --since now --no-pager -o cat -f &
+journalctl -u drone --since now --no-pager -o cat -f |& tee `date +%H:%M` &
 pid=$!
 
 trap end_process INT TERM
