@@ -162,7 +162,10 @@ def parse_events(sock, udp_sock_to_send_out):
 
                     # Filtering out the beacons don't have the contest-specific majors
                     if major not in [65312, 65535, 0]:
-                        continue 
+                        continue
+
+                    if '4941564375704b53446952455449' not in uuid:
+                        continue
                     
                     # beacon = "%s, %i, %i, %i" % (uuid, major, minor, rssi)
                     beacon = "%s,%i,%i,%i" % (uuid, major, minor, rssi)
