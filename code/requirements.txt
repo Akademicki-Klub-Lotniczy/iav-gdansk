@@ -4,7 +4,7 @@ future==0.17.1
 geographiclib==1.49
 geopy==1.20.0
 iso8601==0.1.12
-lxml==4.3.4
+lxml==4.9.1
 monotonic==1.5
 numpy==1.16.4
 pycodestyle==2.5.0
